@@ -1,0 +1,47 @@
+<div class="signup container">
+    <div class="card">
+        <h3>注册</h3>
+        {{user.signup_data}}
+        <form name="signup_form" action="/api/signup" method="POST">
+            <div class="form-group" >
+                <label for="username">用户名</label>
+                <input type="text"
+                       name="username"
+                       id="username"
+                       ng-model="user.signup_data.username"
+                       ng-minlength="4"
+                       required
+                        />
+                <div class="input-error-set" >
+                    <div ng-if="signup_form.username.$error.required
+                            && signup_form.username.$touched">
+                        用户名为必填项
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" >
+                <label for="password">密码</label>
+                <input type="password"
+                       name="password"
+                       id="password"
+                       ng-model="user.signup_data.password"
+                       ng-minlength="4"
+                       ng-maxlength="16"
+                       required
+                        />
+                <div class="input-error-set" >
+                    <div ng-if="signup_form.password.$error.required">密码为必填项</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit"
+                       ng-disabled="signup_form.$invalid" >
+                    注册
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>

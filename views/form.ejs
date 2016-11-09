@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>注册</h1>
+<form action="/api/signup" method="post">
+    用户名：<input type="text" name="username"/><br/>
+    密码：<input type="text" name="password"/>
+    <input type="submit" value="注册"/>
+</form>
+
+<h1>登录</h1>
+<form action="/api/login" method="post">
+    用户名：<input type="text" name="username"/><br/>
+    密码：<input type="text" name="password"/>
+    <input type="submit" value="登录"/>
+</form>
+
+<h1>提问</h1>
+<form action="/api/question/add" method="post">
+    title：<input type="text" name="title"/><br/>
+    desc：<input type="text" name="desc"/>
+    <input type="submit" value="提问"/>
+</form>
+
+<h1>更改问题</h1>
+<form action="/api/question/change" method="post">
+    id：<input type="text" name="id"/><br/>
+    title：<input type="text" name="title"/><br/>
+    desc：<input type="text" name="desc"/>
+    <input type="submit" value="更改问题"/>
+</form>
+
+<h1>查看问题,在地址栏发送get请求？id+limit+skip</h1>
+<a href="/api/question/read">查看问题</a>
+
+
+</body>
+</html>

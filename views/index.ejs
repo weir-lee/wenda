@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="xiaohu">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>晓乎</title>
+    <link rel="stylesheet" href="/lib/normalize.css"/>
+    <link rel="stylesheet" href="/css/base.css"/>
+    <script src="/node_modules/angular/angular.min.js"></script>
+    <script src="/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="/js/base.js"></script>
+</head>
+<body>
+<div class="nav clearfix ">
+    <div class="container">
+        <div class="fl">
+            <div class="nav-item brand">晓乎</div>
+            <div class="nav-item">
+                <input type="text" placeholder="请输入关键字"/>
+            </div>
+        </div>
+        <div class="fr">
+            <a class="nav-item" ui-sref="home">首页</a>
+            <a class="nav-item" ui-sref="signup">注册</a>
+            <a class="nav-item" ui-sref="login">登录</a>
+        </div>
+    </div>
+</div>
+
+<div class="page">
+    <div ui-view></div>
+</div>
+</body>
+</html>
