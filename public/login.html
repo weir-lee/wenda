@@ -1,37 +1,36 @@
 <div class="login container">
     <div class="card">
-        <h3>登录</h3>
-        {{user.signup_data}}
-        <form name="signup_form">
+        <h3>登陆</h3>
+        <!--{{User.loginData}}-->
+        <form name="login_form" ng-submit="User.login()">
             <div class="form-group" >
                 <label for="username">用户名</label>
                 <input type="text"
                        name="username"
                        id="username"
-                       ng-model="user.signup_data.username"
-                       ng-minlength="4"
-                       required
-                        />
-                <div class="input-error-set">
-                    <div ng-if="signup_form.username.$error.required">用户名为必填项</div>
-                </div>
+                       ng-model="User.loginData.username"
+                       required/>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" >
                 <label for="password">密码</label>
                 <input type="password"
                        name="password"
                        id="password"
-                       ng-model="user.signup_data.password"
-                       ng-minlength="6"
-                       ng-maxlength="255"
-                       required
-                        />
+                       ng-model="User.loginData.password"
+                       required/>
             </div>
+
+            <div class="input-error-set">
+                <div ng-if="User.login_failed">用户名或密码错误</div>
+            </div>
+
             <div class="form-group">
-                <button value="登录"
-                        ng-disabled="signup_form.$invalid">
-                    注册</button>
+                <button type="submit"
+                        ng-disabled="login_form.$invalid"
+                        class="primary">
+                    登陆
+                </button>
             </div>
         </form>
     </div>

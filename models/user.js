@@ -26,11 +26,12 @@ User.signup = function (req, res) {
                 // 如果用户名不存在，则存入数据库
                 if (!user) {
                     User.create({username: check.username, password: check.password}).then(function(save){
-                        if (save) {
+                        if (save.username) {
                             // 保存成功
                             // 保存session
                             req.session.login = true;
                             req.session.user_id = save.id;
+                            req.session.username = save.username;
                             res.send({status: 1, msg: 'signup success'});
                         } else {
                             // 保存失败
@@ -84,12 +85,32 @@ User.is_logged_in = function(req){
     return req.session.login ? req.session.user_id.toString():false;
 };
 
+// 用户名是否存在API
+User.usernameExist = function(req,res){
+    getPost(req).then(function(fields){
+        if(!fields.username){
+            res.send({status:0, msg:'username is required'});
+            return;
+        }
+
+        User.findOne({where:{username:fields.username}}).then(function(user){
+            if(user){
+                res.send({status:1, valid:false ,msg:'用户名已存在'});
+                return;
+            }
+            res.send({status:1, valid:true, msg:'用户名有效'});
+        }).catch(function(err){
+            res.send({status:0, msg:'system error'});
+        });
+    });
+};
+
 // 登出api
 User.logout = function(req,res){
     req.session.login = false;
     req.session.user_id = '';
     req.session.username = '';
-    res.send({status:1, msg:'注销成功'});
+    res.redirect('/');
 };
 
 // 修改密码API

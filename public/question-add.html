@@ -1,0 +1,24 @@
+<div class="question container">
+    <div class="card">
+        <form ng-submit="QuestServ.AddQues()" name="quest_add_form">
+            <label>问题标题</label>
+            <div class="form-group">
+                <input type="text"
+                       name="title"
+                       ng-model="QuestServ.newQuest.title"
+                       required/>
+            </div>
+
+            <label>问题描述</label>
+            <div class="form-group">
+                <textarea name="desc" ng-model="QuestServ.newQuest.desc"></textarea>
+            </div>
+
+            <div class="form-group">
+                <button type="submit"
+                        ng-disabled="quest_add_form.title.$error.required"
+                        class="primary">提问</button>
+            </div>
+        </form>
+    </div>
+</div>

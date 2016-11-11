@@ -149,8 +149,32 @@ Question.remove = function(req,res){
             return;
         })
     });
+};
 
+Question.test = function(req,res){
+    var arr = [];
 
+    Question.findAll().then(function(questions){
+        console.log(questions.length);
+        for(var i=0; i<questions.length; i++){
+            questions[i].getUser().then(function(user){
+               // console.log(user);
+                var temp = {};
+                temp.id = questions[i].id;
+                temp.title = questions[i].title;
+                temp.desc = questions[i].desc;
+                temp.userId = questions[i].userId;
+                temp.createdAt = questions[i].createdAt;
+                temp.updatedAt = questions[i].updatedAt;
+                temp.username = user.username;
+                console.log(temp);
+                arr.push(temp);
+            });
+        }
+    });
+
+    //console.log(arr);
+    res.send(arr)
 };
 
 module.exports = Question;

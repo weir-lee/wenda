@@ -1,38 +1,88 @@
-;(function(){
+;
+(function () {
     'use strict';
-    angular.module('xiaohu',['ui.router'])
+    angular.module('xiaohu', ['ui.router','app.user','app.question'])
 
-        .config(['$stateProvider','$urlRouterProvider',
-            function($stateProvider,$urlRouterProvider){
+        .config(['$stateProvider', '$urlRouterProvider',
+            function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/home');
 
                 $stateProvider
-                    .state('home',{
+                    .state('home', {
                         url: '/home',
-                        templateUrl: '/home.html'
+                        templateUrl: '/home.html',
+                        controller: 'HomeController'
                     })
-                    .state('login',{
+                    .state('login', {
                         url: '/login',
-                        templateUrl: '/login.html'
+                        templateUrl: '/login.html',
+                        controller: 'loginController'
                     })
-                    .state('signup',{
+                    .state('signup', {
                         url: '/signup',
                         templateUrl: '/signup.html',
                         controller: 'signupController'
                     })
+                    .state('question', {
+                        abstract: true,
+                        url: '/question',
+                        template: '<div ui-view></div>'
+                    })
+                    .state('question.add', {
+                        url: '/add',
+                        templateUrl: '/question-add.html',
+                        controller: 'QuestionAddController'
+                    })
+
+            }])
+
+        // 首页功能
+        .service('TimelineService', ['$http', function ($http) {
+            var self = this;
+            self.data =[];
+            self.curPage = 1;
+            // 获取时间线数据
+            self.getData = function () {
+                if(self.pending){
+                    return;
+                }
+                self.pending = true;
+                $http.get('/api/timeline?'+'limit=2&page='+self.curPage)
+                    .then(function (r) {
+                        if(r.data.status){
+                            if(r.data.data.length){
+                                self.data = self.data.concat(r.data.data);
+                                self.curPage++;
+                            }else{
+                                self.no_more_data = true;
+                            }
+                        }else{
+                            console.log('network error');
+                        }
+                    }, function (err) {
+                        console.log('network error');
+                    }).finally(function(){
+                        self.pending = false;
+                    });
+            };
+
+
 
         }])
 
-        .service('signUpService',[function(){
-            this.signup_date = {};
-            this.gosign = function(){
-                console.log(123)
-            }
-        }])
+        .controller('HomeController', ['$scope', 'TimelineService',
+            function ($scope, TimelineService) {
+                $scope.Timeline = TimelineService;
+                TimelineService.getData();
 
-        .controller('signupController',['$scope',
-            'signUpService',
-            function($scope,signUpService){
-            $scope.user = signUpService;
+                // 滚动加载数据
+                var $win = $(window);
+                var $doc = $(document);
+                $win.on('scroll',function(){
+                    if(($doc.height() - $win.height() - $win.scrollTop()) < 100){
+                        TimelineService.getData();
+                    }
+                });
+
         }])
 })();

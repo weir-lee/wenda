@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('xiaohu1', 'root', 'root', {
+var sequelize = new Sequelize('xiaohu', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -56,9 +56,11 @@ var Vote = sequelize.define('vote', {
 
 //User与Question 1对多
 User.hasMany(Question, {as: 'questions'});
+Question.belongsTo(User, {as: 'user'});
 
 //User与Answer 1对多
 User.hasMany(Answer, {as: 'answers'});
+Answer.belongsTo(User,{as: 'user'});
 
 //User与Comment 1对多
 User.hasMany(Comment, {as: 'comments'});

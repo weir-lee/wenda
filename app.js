@@ -20,7 +20,10 @@ app.use(session({
 }));
 
 app.get('/', function (req, res) {
-    res.render('index');
+    res.render('index',{
+        'login': req.session.login,
+        'username': req.session.username
+    });
 });
 
 app.post('/api/signup', function(req,res){
@@ -29,6 +32,10 @@ app.post('/api/signup', function(req,res){
 
 app.post('/api/login', function(req,res){
     User.login(req,res);
+});
+
+app.post('/api/user/exist', function(req,res){
+    User.usernameExist(req,res);
 });
 
 app.get('/api/logout', function(req,res){
@@ -93,6 +100,10 @@ app.get('/api/vote/add', function(req,res){
 
 app.get('/api/timeline', function(req,res){
     CommonController.timeline(req,res,Question,Answer);
+});
+
+app.get('/test',function(req,res){
+    Question.test(req,res)
 });
 
 

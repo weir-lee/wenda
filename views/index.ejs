@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="/css/base.css"/>
     <script src="/node_modules/angular/angular.min.js"></script>
     <script src="/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="/lib/jquery-1.11.1.min.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/question.js"></script>
     <script src="/js/base.js"></script>
 </head>
 <body>
@@ -14,14 +17,29 @@
     <div class="container">
         <div class="fl">
             <div class="nav-item brand">晓乎</div>
-            <div class="nav-item">
-                <input type="text" placeholder="请输入关键字"/>
-            </div>
+            <form class="form-group" id="quick_ask"
+                  ng-submit="QuestServ.goAdd()"
+                  ng-controller="QuestionAddController">
+                <div class="nav-item">
+                    <input type="text"
+                           placeholder="请输入..."
+                           ng-model="QuestServ.newQuest.title"
+                            />
+                </div>
+                <div class="nav-item">
+                    <button type="submit" class="primary">提问</button>
+                </div>
+            </form>
         </div>
         <div class="fr">
             <a class="nav-item" ui-sref="home">首页</a>
+            <% if(!login){%>
             <a class="nav-item" ui-sref="signup">注册</a>
-            <a class="nav-item" ui-sref="login">登录</a>
+            <a class="nav-item" ui-sref="login">登陆</a>
+            <% }else{%>
+            <a class="nav-item"><%= username%></a>
+            <a class="nav-item" href="/api/logout">退出</a>
+            <%}%>
         </div>
     </div>
 </div>

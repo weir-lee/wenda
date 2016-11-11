@@ -2,8 +2,15 @@
     /*background: rgba(0, 0, 0, .1);*/
     box-sizing: border-box;
 }
+
+body {
+    line-height: 1.7;
+}
+
 h3 {
     margin: 0;
+    font-size: 16px;
+    font-weight: normal;
 }
 .fl {
     float: left;
@@ -53,13 +60,29 @@ h3 {
     font-size: 20px;
 }
 
+.nav form {
+    display: inline-block;
+    margin: 0;
+}
+
+#quick_ask input {
+    width: 270px;
+}
+
+#quick_ask button {
+    padding:5px 8px;
+    font-size: 15px;
+}
+
 a {
     text-decoration: none;
     color: #fff;
 }
 
+.home.container,
 .signup.container,
-.login.container {
+.login.container,
+.question.container {
     width: 600px;
     margin: 0 auto;
 }
@@ -72,16 +95,30 @@ input {
 }
 
 input,
-button {
+button,
+textarea {
     padding: 4px 6px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    border: 1px solid rgba(0,0,0,.1)
+    border: 1px solid rgba(0,0,0,.1);
 }
 
-button {
+input,
+textarea {
+    width: 100%;
+}
+
+button.primary {
+    background: #086ed5;
+    color: #fff;
+    cursor: pointer;
+}
+
+button[disabled] {
     background: #eee;
+    color: #7f7f7f;
+    cursor: not-allowed;
 }
 
 label {
@@ -108,3 +145,85 @@ label {
     margin: 4px 0;
 }
 
+/*home样式开始*/
+.home .recent {
+    font-size: 14px;
+    color: #666;
+    font-weight: 700;
+}
+
+.home .hr {
+    width: 98%;
+    height: 1px;
+    background: #ccc;
+    margin: 5px 0
+}
+.feed-item {
+    border-bottom: 1px solid #eee;
+    padding: 8px;
+}
+
+.feed-item .vote {
+    width: 10%;
+}
+
+.feed-item-content {
+    width: 90%;
+}
+
+.feed-item-activity {
+    font-size: 13px;
+    color: #999;
+}
+
+.feed-item-title {
+    color: #259;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.content-owner,
+.comment {
+    font-size: 13px;
+    color: #666;
+}
+
+.content-owner {
+    font-weight: 700;
+}
+
+.content-main,
+.comment-user,
+.comment-content
+{
+    font-size: 13px;
+    color: #222;
+}
+
+.comment-item {
+    padding: 10px 5px;
+    border-top: 1px solid #eee;
+}
+
+.triangle {
+    width: 5px;
+    border: 7px solid transparent;
+    border-bottom-color: #ccc;
+    position: relative;
+    left: 6px;
+}
+
+.comment-user {
+    width: 10%;
+}
+
+.comment-content {
+    width: 90%;
+}
+
+.pending {
+    font-size: 40px;
+    color: red;
+    text-align: center;
+}
+/*home结束*/
