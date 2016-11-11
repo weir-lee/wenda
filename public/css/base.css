@@ -165,6 +165,28 @@ label {
 
 .feed-item .vote {
     width: 10%;
+    text-align: center;
+    padding-right: 8px;
+    font-family: 'Microsoft Yahei';
+    font-weight: 500;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.vote .up,
+.vote .down {
+    color: #698ebf;
+    background: #eff6fa;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.vote .up:hover,
+.vote .down:hover {
+    background: #698ebf;
+    color: #fff;
 }
 
 .feed-item-content {
@@ -221,9 +243,11 @@ label {
     width: 90%;
 }
 
-.pending {
-    font-size: 40px;
-    color: red;
+.pending,
+.no-more-data {
+    font-family: 'Microsoft Yahei';
+    font-size: 13px;
+    color: #222;
     text-align: center;
 }
 /*home结束*/

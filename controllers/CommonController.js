@@ -10,11 +10,11 @@ CommonController.timeline = function (req, res, Question, Answer) {
     var resultArr = [];
 
     co(function *() {
-
-
         var questions = yield Question.findAll({
             attributes: ['id', 'title', 'desc', 'userId', 'createdAt', 'updatedAt'],
-            order: [['createdAt', 'desc']]
+            order: [['createdAt', 'desc']],
+            offset: skip,
+            limit: limit
         });
 
         for(var question of questions){
@@ -32,7 +32,9 @@ CommonController.timeline = function (req, res, Question, Answer) {
 
         var answers = yield Answer.findAll({
             attributes: ['id', 'content', 'createdAt', 'updatedAt', 'userId', 'questionId'],
-            order: [['createdAt', 'desc']]
+            order: [['createdAt', 'desc']],
+            offset: skip,
+            limit: limit
         });
 
         for(var answer of answers){
@@ -45,14 +47,19 @@ CommonController.timeline = function (req, res, Question, Answer) {
             temp.createdAt = answer.createdAt;
             temp.updatedAt = answer.updatedAt;
             temp.username = user.username;
-            resultArr.push(temp);
+
+            var votes = yield answer.getVotes();
+            temp.votes = votes;
+            //console.log(votes);
+           resultArr.push(temp);
         }
 
         resultArr.sort(function(a,b){
             return b.createdAt-a.createdAt;
         });
 
-        res.send(resultArr);
+        //res.send('ok');
+        res.send({status:1, data:resultArr});
 
     });
 

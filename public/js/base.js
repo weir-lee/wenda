@@ -1,7 +1,7 @@
 ;
 (function () {
     'use strict';
-    angular.module('xiaohu', ['ui.router','app.user','app.question'])
+    angular.module('xiaohu', ['ui.router','app.user','app.question','app.answer'])
 
         .config(['$stateProvider', '$urlRouterProvider',
             function ($stateProvider, $urlRouterProvider) {
@@ -37,7 +37,7 @@
             }])
 
         // 首页功能
-        .service('TimelineService', ['$http', function ($http) {
+        .service('TimelineService', ['$http','AnswerService', function ($http,AnswerService) {
             var self = this;
             self.data =[];
             self.curPage = 1;
@@ -52,6 +52,9 @@
                         if(r.data.status){
                             if(r.data.data.length){
                                 self.data = self.data.concat(r.data.data);
+                                // 统计票数
+                                AnswerService.CountVoteForAnswers(self.data);
+
                                 self.curPage++;
                             }else{
                                 self.no_more_data = true;
@@ -65,6 +68,22 @@
                         self.pending = false;
                     });
             };
+
+            // 投票
+            self.vote = function(voteObj){
+                if(!voteObj.id || !voteObj.vote_value){
+                    console.log('id and vote_value are required');
+                    return;
+                }
+                var url = '/api/vote/add?'+'&vote_value='+voteObj.vote_value+'&answerId='+voteObj.id;
+                $http.get(url).then(function(r){
+                    if(r.data.status){
+                        console.log('投票成功')
+                    }else{
+                        console.log('投票失败');
+                    }
+                });
+            }
 
 
 

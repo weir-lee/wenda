@@ -22,36 +22,44 @@ Vote.add = function (req, res, Answer) {
             return;
         }
 
-        // answer存在，则查该用户是否已经投过票
-        // 若投过票，则删除以前的投票记录，再添加新的投票记录
-        // 若没有投过，则直接添加一条投票记录
-        // 该操作可以简化为，无论是否投过票，都去数据库删除，再添加新的投票记录。
-        // 在没有投票的情况下，去vote表删除不会报错，找不到对应的记录会返回删除0条记录，找不到就不做删除操作。
-        Vote.findAll({where: {answerId: req.query.answerId}}).then(function (voteArr) {
-            /*var is_voted = false;
-            var len = voteArr.length;
-            console.log(voteArr)
-            for (var i = 0; i < len; i++) {
-                // 该用户投过票
-                if (voteArr[i].userId == parseInt(req.session.user_id)) {
-                    is_voted = true;
-                    break;
-                }
+        // answer存在，则查该用户是否已经投过票.若没有投过票，则直接插入一条记录。
+        // 若投过票，则比较上次的投票和此次是否一致
+        // 若一致，则删除数据库的投票记录。
+        // （因为一个用户对一个回答只能赞、只能踩或不赞不踩，不能同时赞和踩，若已赞或已踩，再点赞或踩，则取消赞或踩）
+        // 若不一致，则更新数据库的投票记录
+        Vote.findOne({where:{answerId:req.query.answerId, userId:req.session.user_id}}).then(function (vote) {
+            // 没有投过票，则向数据库插入一条记录
+            if(!vote){
+                Vote.create({
+                    answerId: req.query.answerId,
+                    userId: req.session.user_id,
+                    vote_value: req.query.vote_value
+                }).then(function(v){
+                    res.send({status:1, msg:'vote successfully'});
+                }).catch(function(err){
+                    console.log(err);
+                    res.send({status:0, msg:'insert db error'});
+                });
             }
-            console.log('is_voted',is_voted);*/
 
-            Vote.destroy({
-                where: {answerId: req.query.answerId, userId: req.session.user_id}})
-            .then(function (result) {
-                    // 返回的 result 是删除记录的条数
-                    Vote.create({
-                        userId: req.session.user_id,
-                        answerId: req.query.answerId,
-                        vote_value: req.query.vote_value
-                    }).then(function(vote){
-                        res.send({status:1, msg:'vote success'});
-                    });
-            })
+            // 若投过票，则比较此次投票与上次的是否一样
+            if(vote.vote_value == req.query.vote_value){
+                // 投票一样，则删除数据库的投票记录
+                vote.destroy().then(function(){
+                    res.send({status:1, msg:'vote successfully'});
+                }).catch(function(err){
+                    console.log(err);
+                    res.send({status:0, msg:'insert db error'});
+                });
+            }else{
+                // 投票不一样，则修改投票记录
+                vote.update({vote_value: req.query.vote_value}).then(function(){
+                    res.send({status:1, msg:'vote successfully'});
+                }).catch(function(err){
+                    console.log(err);
+                    res.send({status:0, msg:'insert db error'});
+                });
+            }
         });
     });
 

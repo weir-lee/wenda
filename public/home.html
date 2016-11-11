@@ -5,9 +5,9 @@
         <div class="feed-item-set">
             <div class="feed-item clearfix"
                     ng-repeat="row in Timeline.data">
-                <div class="vote fl">
-                    <div class="up">赞</div>
-                    <div class="down">踩</div>
+                <div class="vote fl" ng-if="row.questionId">
+                    <div class="up" ng-click="Timeline.vote({id:row.id,vote_value:1})">赞{{row.up_count}}</div>
+                    <div class="down" ng-click="Timeline.vote({id:row.id,vote_value:2})">踩{{row.down_count}}</div>
                 </div>
                 <div class="feed-item-content fr">
                     <div class="feed-item-activity" ng-if="!row.questionId">
@@ -43,6 +43,6 @@
             </div>
         </div>
         <div class="pending" ng-if="Timeline.pending">正在加载中</div>
-        <div class="pending" ng-if="Timeline.no_more_data">没有更多数据了...</div>
+        <div class="no-more-data" ng-if="Timeline.no_more_data">没有更多数据了...</div>
     </div>
 </div>
