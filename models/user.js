@@ -68,7 +68,7 @@ User.login = function(req,res){
                         req.session.login = true;
                         req.session.user_id = user.id;
                         req.session.username = user.username;
-                        res.render('');
+                        res.send({status:1, msg:'login success'});
                     }else{
                         res.send({status:0, msg:'密码错误'});
                     }

@@ -1,4 +1,5 @@
 var Answer = require('./models.js').Answer;
+var co = require('co');
 var getPost = require('../helper/getPost.js');
 
 
@@ -94,28 +95,43 @@ Answer.change = function (req, res) {
 
 // 查看answer API
 Answer.read = function (req, res) {
+    co(function *() {
     // 检验是否传入 answerId 或者 questionId
-    console.log(req.query.id)
-    if (!req.query.id && !req.query.questionId) {
-        res.send({status: 0, msg: 'id or questionId is required'});
-        return;
-    }
-    // 如果传入的是id，则查找这条answer
-    if (req.query.id) {
-        Answer.findById(req.query.id).then(function (answer) {
+        if (!req.query.id && !req.query.questionId) {
+            res.send({status: 0, msg: 'id or questionId is required'});
+            return;
+        }
+
+        // 如果传入的是id，则查找这条answer
+        if (req.query.id) {
+
+            var answer = yield Answer.findById(req.query.id);
             if (!answer) {
                 res.send({status: 0, msg: 'answer does not exist'});
                 return;
             }
-            res.send({status: 1, data: answer});
-        });
-    }
-    // 如果传入的是questionId，则查找对应question的所有answer
-    if (req.query.questionId) {
-        Answer.findAll({where: {questionId: req.query.questionId}}).then(function (answers) {
-            res.send({status:1, data:answers});
-        })
-    }
+
+            var answer_data = {};
+            answer_data.id = answer.id;
+            answer_data.content = answer.content;
+            answer_data.createdAt = answer.createdAt;
+            answer_data.updatedAt = answer.updatedAt;
+            answer_data.userId = answer.userId;
+            answer_data.questionId = answer.questionId;
+
+            // 如果answer存在，则查出vote表的投票信息；
+            var votes = yield answer.getVotes();
+            answer_data.votes = votes;
+            res.send({status: 1, data: answer_data});
+        }
+
+        // 如果传入的是questionId，则查找对应question的所有answer
+        if (req.query.questionId) {
+            Answer.findAll({where: {questionId: req.query.questionId}}).then(function (answers) {
+                res.send({status: 1, data: answers});
+            })
+        }
+    });
 };
 
 module.exports = Answer;

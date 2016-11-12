@@ -71,26 +71,24 @@
 
             // 投票
             self.vote = function(voteObj){
-                if(!voteObj.id || !voteObj.vote_value){
-                    console.log('id and vote_value are required');
-                    return;
-                }
-                var url = '/api/vote/add?'+'&vote_value='+voteObj.vote_value+'&answerId='+voteObj.id;
-                $http.get(url).then(function(r){
-                    if(r.data.status){
-                        console.log('投票成功')
+                AnswerService.vote(voteObj).then(function(r){
+                    if(r){
+                        console.log('投票成功');
+                        // 投票成功后要更新answer的数据，更新界面
+                        AnswerService.updateData(voteObj);
                     }else{
                         console.log('投票失败');
                     }
-                });
+                },function(err){
+                    console.log('network error');
+                })
+
+                ;
             }
-
-
-
         }])
 
-        .controller('HomeController', ['$scope', 'TimelineService',
-            function ($scope, TimelineService) {
+        .controller('HomeController', ['$scope', 'TimelineService','AnswerService',
+            function ($scope, TimelineService, AnswerService) {
                 $scope.Timeline = TimelineService;
                 TimelineService.getData();
 
@@ -102,6 +100,14 @@
                         TimelineService.getData();
                     }
                 });
+
+                // 监视每个answer数据，若发生变化自动更新界面
+                // 对answer投票后该answer的数据会变
+                $scope.$watch(function(){
+                    return AnswerService.data;
+                },function(new_data, old_data){
+                    AnswerService.CountVoteForAnswers(AnswerService.data);
+                },true);
 
         }])
 })();
