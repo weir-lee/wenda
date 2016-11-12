@@ -13,6 +13,7 @@
                     <div class="feed-item-activity" ng-if="!row.questionId">
                         <span>{{row.username}}用户添加了提问</span>
                     </div>
+                    <!--<div ng-if="row.desc">{{row.desc}}</div>-->
                     <div class="feed-item-activity" ng-if="row.questionId">
                         {{row.username}}用户添加了回答
                     </div>
@@ -23,7 +24,7 @@
                         {{row.content}}
                     </div>
                     <div class="content-owner">用户{{row.username}}</div>
-                    <div class="content-main">{{row.desc}}</div>
+                    <div class="content-main" ng-if="row.desc">{{row.desc}}</div>
                     <div class="action-set">
                         <div class="comment">评论</div>
                     </div>

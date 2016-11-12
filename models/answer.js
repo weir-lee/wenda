@@ -120,7 +120,8 @@ Answer.read = function (req, res) {
             answer_data.questionId = answer.questionId;
 
             // 如果answer存在，则查出vote表的投票信息；
-            var votes = yield answer.getVotes();
+            var votes = [];
+            votes = yield answer.getVotes();
             answer_data.votes = votes;
             res.send({status: 1, data: answer_data});
         }

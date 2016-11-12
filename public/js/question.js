@@ -17,7 +17,7 @@ angular.module('app.question',[])
                 if (r.data.status) {
                     self.newQuest = {};
                     //$state.go('home');
-                    windw.location.href = '/';
+                    window.location.href = '/';
                 }
             }, function (err) {
 

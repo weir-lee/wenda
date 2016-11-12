@@ -50,7 +50,6 @@ CommonController.timeline = function (req, res, Question, Answer) {
 
             var votes = yield answer.getVotes();
             temp.votes = votes;
-            //console.log(votes);
            resultArr.push(temp);
         }
 
@@ -58,7 +57,6 @@ CommonController.timeline = function (req, res, Question, Answer) {
             return b.createdAt-a.createdAt;
         });
 
-        //res.send('ok');
         res.send({status:1, data:resultArr});
 
     });
