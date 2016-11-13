@@ -13,11 +13,10 @@
                     <div class="feed-item-activity" ng-if="!row.questionId">
                         <span>{{row.username}}用户添加了提问</span>
                     </div>
-                    <!--<div ng-if="row.desc">{{row.desc}}</div>-->
                     <div class="feed-item-activity" ng-if="row.questionId">
                         {{row.username}}用户添加了回答
                     </div>
-                    <div class="feed-item-title" ng-if="!row.questionId">
+                    <div class="feed-item-title" ng-if="!row.questionId" ui-sref="question.detail({id:row.id})">
                         {{row.title}}
                     </div>
                     <div class="feed-item-title" ng-if="row.questionId">

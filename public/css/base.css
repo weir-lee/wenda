@@ -82,8 +82,9 @@ a {
 .home.container,
 .signup.container,
 .login.container,
-.question.container {
-    width: 600px;
+.question.container,
+.user.container {
+width: 600px;
     margin: 0 auto;
 }
 
@@ -202,6 +203,7 @@ label {
     color: #259;
     font-size: 14px;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .content-owner,

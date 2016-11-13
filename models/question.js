@@ -1,5 +1,6 @@
 var Question = require('./models.js').Question;
 var getPost = require('../helper/getPost.js');
+var co = require('co');
 
 /************Question API***************/
 
@@ -83,31 +84,55 @@ Question.change = function (req, res) {
 };
 
 // 查看问题API;
-Question.read = function(req,res){
-    if(req.query.id){
-        Question.findById(id).then(function(question){
-            res.send({status:1, data:question});
-                return;
-        });
-    }
+Question.read = function(req,res,User){
+    co(function *(){
+        // 传入的是问题的id
+        if(req.query.id){
+            var id = parseInt(req.query.id);
+            Question.findById(id).then(function(question){
+                if(!question){
+                    res.send({status:0, msg:'question does not exist'});
+                }else{
+                    res.send({status:1, data:question});
+                }
+            });
+        }
 
-    var limit = req.query.limit ? parseInt(req.query.limit):15;
-    var skip = req.query.page ? (req.query.page-1)*limit:0;
-    console.log(limit,skip)
-    Question.findAll({
-        offset: skip,
-        limit: limit,
-        attributes: ['id','title','desc','userId','createdAt','updatedAt'],
-        order:  [['createdAt','desc']]
-        //keyBy: 'id'
-    }).then(function(result){
-        res.send(result);
-        return;
-    }).catch(function (err) {
-        console.log(err);
-        res.send({status:0, msg:'system error! read question failed'});
-        return;
-    })
+        // 传入的是userId
+        else if(req.query.userId){
+            var userId;
+            if(req.query.userId == 'self'){
+                if(!req.session.login){
+                    res.send({status:0, msg:'login required'});
+                    return;
+                }
+                userId = req.session.user_id;
+            }else{
+                userId = req.query.userId;
+            }
+            var user = yield User.findById(userId);
+            var questions = yield user.getQuestions();
+            res.send({status:1, data:questions});
+        }
+
+        else{
+            // 没有传任何参数
+            var limit = req.query.limit ? parseInt(req.query.limit):15;
+            var skip = req.query.page ? (req.query.page-1)*limit:0;
+
+            Question.findAll({
+                offset: skip,
+                limit: limit,
+                attributes: ['id','title','desc','userId','createdAt','updatedAt'],
+                order:  [['createdAt','desc']]
+            }).then(function(result){
+                res.send(result);
+            }).catch(function (err) {
+                console.log(err);
+                res.send({status:0, msg:'system error! read question failed'});
+            })
+        }
+    });
 };
 
 // 删除问题API

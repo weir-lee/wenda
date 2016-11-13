@@ -36,13 +36,13 @@ Vote.add = function (req, res, Answer) {
                     vote_value: req.query.vote_value
                 }).then(function(v){
                     res.send({status:1, msg:'vote successfully'});
+                    return;
                 }).catch(function(err){
                     console.log(err);
                     res.send({status:0, msg:'insert db error'});
                 });
             }
 
-            //console.log(vote)
             // 若投过票，则比较此次投票与上次的是否一样
             if(vote.vote_value == req.query.vote_value){
                 // 投票一样，则删除数据库的投票记录

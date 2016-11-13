@@ -3,7 +3,7 @@ angular.module('app.answer', [])
 .service('AnswerService',['$http', function($http){
         var self = this;
         // data属性用于存放页面上的answers和questions数据
-        self.data = {};
+        self.data = [];
         // 统计所有answer的票数
         self.CountVoteForAnswers = function(answers){
             for(var item of answers){
@@ -16,6 +16,8 @@ angular.module('app.answer', [])
                 var votes = item.votes;
                 // 判断一个answer是否被投票，若没有被投过票，则不统计
                 if(!votes.length){
+                    item.up_count = '';
+                    item.down_count = '';
                     continue;
                 }
                 // 如果一个answer投过票，则统计票数
@@ -52,12 +54,19 @@ angular.module('app.answer', [])
         // 投票后更新对应的answer的数据
         self.updateData = function(voteObj){
             // 发送请求获取最新的answer投票数据,更新AnswerService里对应的那个answer
-            $http.get('/api/answer/read?id='+voteObj.id).then(function(r){
+            $http.post('/api/answer/read?',voteObj).then(function(r){
                 if(r.data.status == 1){
-                    self.data = r.data.data;
+                    self.data.push(r.data.data);
                 }
             },function(err){
                 console.log('network error');
+            });
+        }
+
+        //
+        self.read = function(params){
+            return $http.post('/api/answer/read',params).then(function(r){
+                return r.data;
             });
         }
     }]);

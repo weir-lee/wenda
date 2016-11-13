@@ -67,6 +67,7 @@ User.hasMany(Comment, {as: 'comments'});
 
 // Question 与 Answer 一对多
 Question.hasMany(Answer, {as: 'answers'});
+Answer.belongsTo(Question, {as: 'question'});
 
 //Question 与 Comment  一对多
 Question.hasMany(Comment, {as: 'comments'});

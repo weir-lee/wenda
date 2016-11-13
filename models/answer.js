@@ -93,19 +93,23 @@ Answer.change = function (req, res) {
     })
 };
 
+
+
 // 查看answer API
-Answer.read = function (req, res) {
+Answer.read = function (req, res, User) {
     co(function *() {
-    // 检验是否传入 answerId 或者 questionId
-        if (!req.query.id && !req.query.questionId) {
-            res.send({status: 0, msg: 'id or questionId is required'});
+        var params = yield getPost(req);
+    // 检验是否传入 answerId 或者 questionId 或者某个用户的id
+        if (!params.id && !params.questionId && !params.userId) {
+            res.send({status: 0, msg: 'id or questionId or userId is required'});
             return;
         }
 
+        // 查看单个answer
         // 如果传入的是id，则查找这条answer
-        if (req.query.id) {
+        if (params.id) {
 
-            var answer = yield Answer.findById(req.query.id);
+            var answer = yield Answer.findById(params.id);
             if (!answer) {
                 res.send({status: 0, msg: 'answer does not exist'});
                 return;
@@ -126,9 +130,54 @@ Answer.read = function (req, res) {
             res.send({status: 1, data: answer_data});
         }
 
+        // 如果传入的是userId
+        if(params.userId){
+            var userId;
+            if(params.userId == 'self'){
+                if(!req.session.login){
+                    res.send({status:0, msg:'login required'});
+                    return;
+                }
+                userId = req.session.user_id;
+            } else{
+                userId = params.userId;
+                // 查看用户是否存在
+                var user = yield User.findById(userId);
+                if(!user){
+                    res.send({status:0, msg:'user does not exist'});
+                    return;
+                }
+            }
+            // 查找该用户的所有answer
+            var user = yield User.findById(userId);
+            var answers = yield user.getAnswers();
+            if(!answers.length){
+                res.send({status:1, data:answers});
+                return;
+            }
+            var arr = [];
+            for(var answer of answers){
+                var answer_data = {};
+                answer_data.id = answer.id;
+                answer_data.content = answer.content;
+                answer_data.createdAt = answer.createdAt;
+                answer_data.updatedAt = answer.updatedAt;
+                answer_data.userId = answer.userId;
+                answer_data.questionId = answer.questionId;
+
+                // 查出vote表的投票信息；
+                answer_data.votes = yield answer.getVotes();
+                // 查出属于哪个question
+                answer_data.question = yield answer.getQuestion();
+                //console.log('q',question)
+                arr.push(answer_data);
+            }
+            res.send({status: 1, data: arr});
+        }
+
         // 如果传入的是questionId，则查找对应question的所有answer
-        if (req.query.questionId) {
-            Answer.findAll({where: {questionId: req.query.questionId}}).then(function (answers) {
+        if (params.questionId) {
+            Answer.findAll({where: {questionId: params.questionId}}).then(function (answers) {
                 res.send({status: 1, data: answers});
             })
         }

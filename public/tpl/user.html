@@ -1,0 +1,25 @@
+<div class="user container">
+    <div class="card">
+        <h2>用户详情</h2>
+        <div class="basic">
+            用户详情 {{User.intro || '暂无介绍'}}
+            <hr/>
+        </div>
+        <h4>用户的提问</h4>
+        <div ng-repeat="question in User.his_questions">
+            <div>问题标题：{{question.title}}</div>
+            <div ng-if="question.desc">描述：{{question.desc}}</div>
+            <div>更新时间：{{question.updatedAt}}</div>
+            <hr/>
+        </div>
+
+        <h4>用户的回答</h4>
+        <div ng-repeat="answer in User.his_answers">
+            <div>问题：{{answer.question.title}}</div>
+            <div>回答内容：{{answer.content}}</div>
+            <div>更新时间：{{answer.updatedAt}}</div>
+            <hr/>
+        </div>
+    </div>
+
+</div>

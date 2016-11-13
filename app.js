@@ -22,7 +22,8 @@ app.use(session({
 app.get('/', function (req, res) {
     res.render('index',{
         'login': req.session.login,
-        'username': req.session.username
+        'username': req.session.username,
+        'userId': req.session.user_id
     });
 });
 
@@ -63,7 +64,7 @@ app.post('/api/question/change', function(req,res){
 });
 
 app.get('/api/question/read', function(req,res){
-    Question.read(req,res);
+    Question.read(req,res,User);
 });
 
 app.get('/api/question/remove', function(req,res){
@@ -78,8 +79,8 @@ app.post('/api/answer/change', function(req,res){
     Answer.change(req,res);
 });
 
-app.get('/api/answer/read', function(req,res){
-    Answer.read(req,res);
+app.post('/api/answer/read', function(req,res){
+    Answer.read(req,res,User);
 });
 
 app.post('/api/comment/add', function(req,res){

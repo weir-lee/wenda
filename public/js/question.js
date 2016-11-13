@@ -23,6 +23,13 @@ angular.module('app.question',[])
 
             });
         };
+
+        self.read = function(params){
+            var url = '/api/question/read?userId='+params.userId;
+            return $http.get(url).then(function(r){
+                return r.data;
+            });
+        }
     }])
 
     .controller('QuestionAddController', ['$scope',
@@ -31,5 +38,12 @@ angular.module('app.question',[])
             $scope.QuestServ = QuestServ;
         }
     ])
+
+    .controller('QuestionDetailController',['$scope','$stateParams','QuestServ',
+        function($scope,$stateParams,QuestServ){
+            console.log($stateParams)
+            $scope.Question = QuestServ;
+
+    }])
 
 ;

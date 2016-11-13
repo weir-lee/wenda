@@ -10,17 +10,17 @@
                 $stateProvider
                     .state('home', {
                         url: '/home',
-                        templateUrl: '/home.html',
+                        templateUrl: '/tpl/home.html',
                         controller: 'HomeController'
                     })
                     .state('login', {
                         url: '/login',
-                        templateUrl: '/login.html',
+                        templateUrl: '/tpl/login.html',
                         controller: 'loginController'
                     })
                     .state('signup', {
                         url: '/signup',
-                        templateUrl: '/signup.html',
+                        templateUrl: '/tpl/signup.html',
                         controller: 'signupController'
                     })
                     .state('question', {
@@ -30,8 +30,18 @@
                     })
                     .state('question.add', {
                         url: '/add',
-                        templateUrl: '/question-add.html',
+                        templateUrl: '/tpl/question-add.html',
                         controller: 'QuestionAddController'
+                    })
+                    .state('question.detail', {
+                        url: '/detail/:id',
+                        templateUrl: '/tpl/question-detail.html',
+                        controller: 'QuestionDetailController'
+                    })
+                    .state('user', {
+                        url: '/user/:userId',
+                        templateUrl: '/tpl/user.html',
+                        controller: 'UserController'
                     })
 
             }])
@@ -105,15 +115,17 @@
                 $scope.$watch(function(){
                     return AnswerService.data;
                 },function(new_data, old_data){
-                    console.log(new_data)
+                    //console.log(new_data)
                     // AnswerService的数据发生变化时对TimelineService的数据更新
                     var timeline_data = TimelineService.data;
-                    for(var i = 0; i < timeline_data.length; i++){
+                    for(let i = 0; i < timeline_data.length; i++){
                         if(!timeline_data[i].questionId)
                             continue;
-                        if(timeline_data[i].id == new_data.id){
-                            timeline_data[i].votes = new_data.votes;
-                            AnswerService.CountVoteForAnswers(TimelineService.data);
+                        for(let j = 0; j < new_data.length; j++){
+                            if(timeline_data[i].id == new_data[j].id){
+                                timeline_data[i].votes = new_data[j].votes;
+                                AnswerService.CountVoteForAnswers(TimelineService.data);
+                            }
                         }
                     }
                 },true);
